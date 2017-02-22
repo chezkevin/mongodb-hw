@@ -5,16 +5,15 @@ var cheerio = require("cheerio");
 // Routes
 // =============================================================
 module.exports = function(app) {
+
   // Main route (simple Hello World Message)
   app.get("/", function(req, res) {
+    var scrapings = [];
     request("https://www.reddit.com/r/pkmntcg", function(error, response, html) {
 
       // Load the HTML into cheerio and save it to a variable
       // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
       var $ = cheerio.load(html);
-
-      // An empty array to save the data that we'll scrape
-      var result = [];
 
       // With cheerio, find each p-tag with the "title" class
       // (i: iterator. element: the current element)
@@ -29,10 +28,10 @@ module.exports = function(app) {
 
           // If this title element had both a title and a link
         if (title && link) {
-          console.log(title);
           console.log(link);
+          console.log(title);
           // Save the data in the scrapedData db
-          var article = new Article({
+          scrapings.push({
             title: title,
             link: link
           },
@@ -49,12 +48,11 @@ module.exports = function(app) {
             }
           });
         }
-
-
       });
     });
 
-    res.render('index', { articles: "Hello world" });
+    res.render('index', {
+      articles: scrapings });
   });
 
   app.get("/scrape", function(req, res){
