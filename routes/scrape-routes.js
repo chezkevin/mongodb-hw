@@ -7,11 +7,6 @@ var cheerio = require("cheerio");
 module.exports = function(app) {
   // Main route (simple Hello World Message)
   app.get("/", function(req, res) {
-    res.render('index', { articles: "Hello world" });
-  });
-
-  app.get("/scrape", function(req, res){
-    // Making a request call for reddit's "webdev" board. The page's HTML is saved as the callback's third argument
     request("https://www.reddit.com/r/pkmntcg", function(error, response, html) {
 
       // Load the HTML into cheerio and save it to a variable
@@ -34,6 +29,8 @@ module.exports = function(app) {
 
           // If this title element had both a title and a link
         if (title && link) {
+          console.log(title);
+          console.log(link);
           // Save the data in the scrapedData db
           var article = new Article({
             title: title,
@@ -56,5 +53,11 @@ module.exports = function(app) {
 
       });
     });
+
+    res.render('index', { articles: "Hello world" });
+  });
+
+  app.get("/scrape", function(req, res){
+    // Making a request call for reddit's "webdev" board. The page's HTML is saved as the callback's third argument
   });
 }
