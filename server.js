@@ -22,14 +22,9 @@ db.once('open', function() {
   console.log("connected to mongoose");
 });
 
-// create the article schema
-var articleSchema = mongoose.Schema({
-    title: String,
-    link: String
-});
-
-// set up the article model
-var Article = mongoose.model('Article', articleSchema);
+// require models for articles and comments
+var Article = require("./models/article.js");
+var Comment = require("./models/comment.js");
 
 // Sets up the Express App
 // =============================================================
