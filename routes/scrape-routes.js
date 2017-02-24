@@ -25,11 +25,10 @@ module.exports = function(app) {
         // In the currently selected element, look at its child elements (i.e., its a-tags),
         // then save the values for any "href" attributes that the child elements may have
         var link = $(element).children().attr("href");
-        console.log(link);
-        console.log(title);
 
           // If this title element had both a title and a link
         if (title && link) {
+          console.log("hello from line 31");
           // Save the data in the scrapedData db
           scrapings.push({
             title: title,
@@ -50,9 +49,8 @@ module.exports = function(app) {
         }
       });
     });
-
-    res.render('index', {
-      articles: scrapings });
+    console.log(scrapings);
+    res.render('index', { articles: scrapings });
   });
 
   app.get("/scrape", function(req, res){

@@ -11,6 +11,11 @@ var mongoose = require("mongoose");
 // get access to mongoose schema methods
 var Schema = mongoose.schema;
 
+// Mongoose mpromise deprecated - use bluebird promises
+var Promise = require("bluebird");
+
+mongoose.Promise = Promise;
+
 // Database configuration
 mongoose.connect('mongodb://localhost/news_db');
 
@@ -24,7 +29,7 @@ db.once('open', function() {
 
 // require models for articles and comments
 var Article = require("./models/article.js");
-var Comment = require("./models/comment.js");
+var CommentModel = require("./models/comment.js");
 
 // Sets up the Express App
 // =============================================================
@@ -37,6 +42,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 
+// Routes =============================================================
+
+require("./routes/scrape-routes.js")(app);
+
 // Override with POST having ?_method=DELETE
 //app.use(methodOverride("_method"));
 var exphbs = require("express-handlebars");
@@ -47,10 +56,6 @@ app.set("view engine", "handlebars");
 
 // Static directory
 app.use(express.static("./public"));
-
-// Routes =============================================================
-
-require("./routes/scrape-routes.js")(app);
 
 // Listen on port 3000
 app.listen(3000, function() {
